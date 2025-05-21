@@ -6180,7 +6180,7 @@ function Luna:CreateWindow(WindowSettings)
 						return
 					end
 
-					local success, returned = Luna:SaveConfig(inputPath)
+					local success, returned = Luna:SaveConfig(inputPath, getgenv().Config)
 					if not success then
 						Luna:Notification({
 							Title = "Interface",
@@ -6230,7 +6230,12 @@ function Luna:CreateWindow(WindowSettings)
 						})
 						return
 					end
-
+					
+					-- ✅ Merge table into global Config
+					for k, v in pairs(returned) do
+						getgenv().Config[k] = v
+					end
+					
 					Luna:Notification({
 						Title = "Interface",
 						Icon = "info",
@@ -6244,7 +6249,7 @@ function Luna:CreateWindow(WindowSettings)
 				Name = "Overwrite Config",
 				Description = "Overwrite your current config settings.",
 				Callback = function()
-					local success, returned = Luna:SaveConfig(selectedConfig)
+					local success, returned = Luna:SaveConfig(selectedConfig, getgenv().Config)
 					if not success then
 						Luna:Notification({
 							Title = "Interface",
